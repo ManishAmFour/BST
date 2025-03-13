@@ -1,13 +1,52 @@
 import Node from "./Node.js";
 
+class Tree {
+  constructor(array) {
+    this.root = buildTree(array);
+  }
+
+  insert(value, path = this.root) {
+    if (value > path.rootNode && path.right === null) {
+      let NewNode = new Node(null, value, null);
+      path.right = NewNode;
+    }
+    if (value < path.rootNode && path.left === null) {
+      let NewNode = new Node(null, value, null);
+
+      path.left = NewNode;
+    }
+
+    if (value > path.rootNode) {
+      return this.insert(value, path.right);
+    }
+    if (value < path.rootNode) {
+      return this.insert(value, path.left);
+    }
+  }
+  delete(value, path = this.root) {
+    if (value === path.rootNode) {
+      return;
+    }
+
+    if (value > path.rootNode) {
+      this.delete(value, path.right);
+    }
+    if (value < path.rootNode) {
+      this.delete(value, path.left);
+    }
+  }
+}
+
 function buildTree(array) {
+  if (array.length === 0) {
+    return null;
+  }
   if (array.length === 1) {
-    let Value = new Node(undefined, array[0], undefined);
+    let Value = new Node(null, array[0], null);
     return Value;
   }
   let MainArray = check(array);
   let MainSortedArray = sortedArray(MainArray);
-  console.log(MainSortedArray);
   let middleValue = Math.floor(MainSortedArray.length / 2);
   let leftArray = [];
   let RightArray = [];
@@ -19,6 +58,9 @@ function buildTree(array) {
     }
   }
   let rootValue = MainSortedArray[middleValue];
+  if (RightArray.includes(rootValue)) {
+    RightArray.shift();
+  }
   let rootNode = new Node(
     buildTree(leftArray),
     rootValue,
@@ -42,6 +84,7 @@ function sortedArray(array) {
     }
   }
   let finalValue = sort(sortedArray(leftArray), sortedArray(RightArray));
+
   return finalValue;
 }
 
@@ -52,6 +95,7 @@ function check(array) {
       NonDuplicateArray.push(value);
     }
   });
+
   return NonDuplicateArray;
 }
 
@@ -77,4 +121,7 @@ function sort(leftArray, rightArray) {
 }
 
 let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-console.log(buildTree(ArraySorted));
+let TreeValue = new Tree(ArraySorted);
+TreeValue.delete(3);
+
+console.log(TreeValue);

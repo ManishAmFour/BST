@@ -1,8 +1,8 @@
 class Node {
-  constructor(Array, rightChildren, leftChildren) {
-    this.Array = Array;
-    this.rightChildren = rightChildren;
-    this.leftChildren = leftChildren;
+  constructor(left, rootNode, right) {
+    this.left = left;
+    this.rootNode = rootNode;
+    this.right = right;
   }
 }
 
