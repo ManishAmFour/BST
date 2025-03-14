@@ -24,16 +24,59 @@ class Tree {
     }
   }
   delete(value, path = this.root) {
+    let traverse;
+
     if (value === path.rootNode) {
-      return;
+      return path;
     }
 
     if (value > path.rootNode) {
-      this.delete(value, path.right);
+      traverse = this.delete(value, path.right);
     }
     if (value < path.rootNode) {
-      this.delete(value, path.left);
+      traverse = this.delete(value, path.left);
     }
+
+    if (traverse.left === null && traverse.right === null) {
+      if (path.left !== null) {
+        if (path.left.rootNode === traverse.rootNode) {
+          path.left = null;
+        }
+      }
+
+      if (path.right !== null) {
+        if (path.right.rootNode === traverse.rootNode) {
+          path.right = null;
+        }
+      }
+    }
+    if (
+      (traverse.left !== null && traverse.right === null) ||
+      (traverse.right !== null && traverse.left === null)
+    ) {
+      if (path.left.rootNode === traverse.rootNode) {
+        if (traverse.left !== null) {
+          path.left.rootNode = traverse.left.rootNode;
+          path.left.left = null;
+        }
+        if (traverse.right !== null) {
+          path.left.rootNode = traverse.right.rootNode;
+          path.left.right = null;
+        }
+      }
+      if (path.right.rootNode === traverse.rootNode) {
+        if (traverse.left !== null) {
+          path.right.rootNode = traverse.left.rootNode;
+          path.right.left = null;
+        }
+        if (traverse.right !== null) {
+          path.right.rootNode = traverse.right.rootNode;
+          path.right.right = null;
+        }
+      }
+    }
+
+    return traverse;
   }
 }
 
@@ -122,6 +165,5 @@ function sort(leftArray, rightArray) {
 
 let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 let TreeValue = new Tree(ArraySorted);
-TreeValue.delete(3);
 
 console.log(TreeValue);
