@@ -26,11 +26,22 @@ class Tree {
   delete(value, path = this.root) {
     let traverse;
 
+    if (path.left === null) {
+      return path;
+    }
+
+    if (value === path.rootNode && path.left !== null && path.right !== null) {
+      traverse = this.delete(value, path.right);
+
+      return this.delete(traverse, this.root);
+    }
+
     if (value === path.rootNode) {
       return path;
     }
 
     if (value > path.rootNode) {
+      console.log(path)
       traverse = this.delete(value, path.right);
     }
     if (value < path.rootNode) {
@@ -56,22 +67,18 @@ class Tree {
     ) {
       if (path.left.rootNode === traverse.rootNode) {
         if (traverse.left !== null) {
-          path.left.rootNode = traverse.left.rootNode;
-          path.left.left = null;
+          path.left = traverse.left;
         }
         if (traverse.right !== null) {
-          path.left.rootNode = traverse.right.rootNode;
-          path.left.right = null;
+          path.right = traverse.left;
         }
       }
       if (path.right.rootNode === traverse.rootNode) {
         if (traverse.left !== null) {
-          path.right.rootNode = traverse.left.rootNode;
-          path.right.left = null;
+          path.right = traverse.left;
         }
         if (traverse.right !== null) {
-          path.right.rootNode = traverse.right.rootNode;
-          path.right.right = null;
+          path.right = traverse.right;
         }
       }
     }
@@ -165,5 +172,7 @@ function sort(leftArray, rightArray) {
 
 let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 let TreeValue = new Tree(ArraySorted);
+TreeValue.insert(25);
+TreeValue.delete(8);
 
 console.log(TreeValue);
