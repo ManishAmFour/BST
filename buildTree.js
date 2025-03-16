@@ -29,25 +29,54 @@ class Tree {
     if (path.left === null) {
       return path;
     }
-
     if (value === path.rootNode && path.left !== null && path.right !== null) {
       traverse = this.delete(value, path.right);
+      if (traverse.left === null && traverse.right === null) {
+        if (path.left !== null) {
+          if (path.left.rootNode === traverse.rootNode) {
+            path.left = null;
+          }
+        }
 
-      return this.delete(traverse, this.root);
+        if (path.right !== null) {
+          if (path.right.rootNode === traverse.rootNode) {
+            path.right = null;
+          }
+        }
+      }
+      if (
+        (traverse.left !== null && traverse.right === null) ||
+        (traverse.right !== null && traverse.left === null)
+      ) {
+        if (path.left.rootNode === traverse.rootNode) {
+          if (traverse.left !== null) {
+            path.left = traverse.left;
+          }
+          if (traverse.right !== null) {
+            path.right = traverse.left;
+          }
+        }
+        if (path.right.rootNode === traverse.rootNode) {
+          if (traverse.left !== null) {
+            path.right = traverse.left;
+          }
+          if (traverse.right !== null) {
+            path.right = traverse.right;
+          }
+        }
+      }
+      return (path.rootNode = traverse.rootNode);
     }
-
     if (value === path.rootNode) {
       return path;
     }
 
     if (value > path.rootNode) {
-      console.log(path)
       traverse = this.delete(value, path.right);
     }
     if (value < path.rootNode) {
       traverse = this.delete(value, path.left);
     }
-
     if (traverse.left === null && traverse.right === null) {
       if (path.left !== null) {
         if (path.left.rootNode === traverse.rootNode) {
@@ -82,7 +111,6 @@ class Tree {
         }
       }
     }
-
     return traverse;
   }
 }
@@ -172,7 +200,5 @@ function sort(leftArray, rightArray) {
 
 let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 let TreeValue = new Tree(ArraySorted);
-TreeValue.insert(25);
-TreeValue.delete(8);
 
 console.log(TreeValue);
