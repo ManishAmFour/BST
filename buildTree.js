@@ -113,6 +113,81 @@ class Tree {
     }
     return traverse;
   }
+  find(value, path = this.root) {
+    let traverse;
+    if (value === path.rootNode) {
+      return path;
+    }
+
+    if (value > path.rootNode) {
+      traverse = this.find(value, path.right);
+    }
+    if (value < path.rootNode) {
+      traverse = this.find(value, path.left);
+    }
+
+    return traverse;
+  }
+  levelOrder(callback, queue = [this.root]) {
+    if (callback === undefined) {
+      throw new Error("Callback function is not provided");
+    }
+    if (queue[0].left === null && queue[0].right === null) {
+      queue.forEach((value, index) => {
+        callback(value.rootNode);
+      });
+      return;
+    }
+    if (queue[0].left !== null) {
+      queue.push(queue[0].left);
+    }
+
+    if (queue[0].right !== null) {
+      queue.push(queue[0].right);
+    }
+    callback(queue[0].rootNode);
+    queue.shift();
+    this.levelOrder(callback, queue);
+    return;
+  }
+  levelOrderIteration(callback, queue = [this.root], i = 0) {
+    if (queue[i].left === null && queue[i].right === null) {
+      queue.forEach((value, index) => {
+        console.log(value.rootNode);
+      });
+
+      return;
+    }
+    if (queue[i].left !== null) {
+      queue.push(queue[i].left);
+    }
+    if (queue[i].right !== null) {
+      queue.push(queue[i].right);
+    }
+
+    this.levelOrderIteration(callback, queue, (i += 1));
+    return queue;
+  }
+  preOrder(callback, callstack = [this.root], i = 0) {
+    if (callstack[i].right === null && callstack[i].left === null) {
+      callback(callstack[i].rootNode);
+
+      return;
+    }
+    if (callstack[i].left !== null) {
+      callstack.push(callstack[i].left);
+      callback(callstack[i].rootNode);
+
+      this.preOrder(callback, callstack, (i += 1));
+    }
+    if (callstack[i].right !== null) {
+      callstack.push(callstack[i].right);
+      callback(callstack[i].rootNode);
+
+      this.preOrder(callback, callstack, (i += 1));
+    }
+    return;
+  }
 }
 
 function buildTree(array) {
@@ -201,4 +276,6 @@ function sort(leftArray, rightArray) {
 let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 let TreeValue = new Tree(ArraySorted);
 
-console.log(TreeValue);
+TreeValue.preOrder((node) => {
+  console.log(node);
+});
