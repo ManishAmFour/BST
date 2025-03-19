@@ -168,25 +168,38 @@ class Tree {
     this.levelOrderIteration(callback, queue, (i += 1));
     return queue;
   }
-  preOrder(callback, callstack = [this.root], i = 0) {
-    if (callstack[i].right === null && callstack[i].left === null) {
-      callback(callstack[i].rootNode);
-
+  preOrder(callback, callstack = [this.root]) {
+    callback(callstack[0].rootNode);
+    if (callstack[0].left !== null) {
+      callstack.unshift(callstack[0].left);
+      this.preOrder(callback, callstack);
+      callstack.shift();
+    }
+    if (callstack[0].right !== null) {
+      callstack.unshift(callstack[0].right);
+      this.preOrder(callback, callstack);
+      callstack.shift();
+    }
+  }
+  inOrder(callback, callstack = [this.root]) {
+    if (callstack[0].left === null) {
+      callback(callstack[0].rootNode);
+      callstack.shift();
       return;
     }
-    if (callstack[i].left !== null) {
-      callstack.push(callstack[i].left);
-      callback(callstack[i].rootNode);
 
-      this.preOrder(callback, callstack, (i += 1));
+    if (callstack[0].left !== null) {
+      callstack.unshift(callstack[0].left);
+      this.inOrder(callback, callstack);
     }
-    if (callstack[i].right !== null) {
-      callstack.push(callstack[i].right);
-      callback(callstack[i].rootNode);
+    callback(callstack[0].rootNode);
 
-      this.preOrder(callback, callstack, (i += 1));
+    if (callstack[0].right !== null) {
+      callstack.unshift(callstack[0].right);
+      this.inOrder(callback, callstack);
     }
-    return;
+
+    callstack.shift();
   }
 }
 
@@ -276,6 +289,6 @@ function sort(leftArray, rightArray) {
 let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 let TreeValue = new Tree(ArraySorted);
 
-TreeValue.preOrder((node) => {
+TreeValue.inOrder((node) => {
   console.log(node);
 });
