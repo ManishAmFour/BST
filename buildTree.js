@@ -201,6 +201,105 @@ class Tree {
 
     callstack.shift();
   }
+  postOrder(callback, callstack = [this.root]) {
+    if (callstack[0].right === null && callstack[0].left === null) {
+      callback(callstack[0].rootNode);
+      callstack.shift();
+      return;
+    }
+
+    if (callstack[0].left !== null) {
+      callstack.unshift(callstack[0].left);
+      this.postOrder(callback, callstack);
+    }
+
+    if (callstack[0].right !== null) {
+      callstack.unshift(callstack[0].right);
+      this.postOrder(callback, callstack);
+    }
+    callback(callstack[0].rootNode);
+
+    callstack.shift();
+  }
+  height(node, queue = [this.find(node)], prevElement = [...queue]) {
+    if (queue[0] === undefined) {
+      return 0;
+    }
+    if (queue[0] !== undefined) {
+      if (queue[0].left !== null) {
+        queue.push(queue[0].left);
+      }
+
+      if (queue[0].right !== null) {
+        queue.push(queue[0].right);
+      }
+    }
+    queue.shift();
+    let count;
+    if (!prevElement.includes(queue[0]) && queue.length !== 0) {
+      count = 1;
+      prevElement = [...queue];
+    } else {
+      count = 0;
+    }
+    let TotalCount = count + this.height(node, queue, prevElement);
+    return TotalCount;
+  }
+  depth(
+    node,
+    queue = [this.find(this.root.rootNode)],
+    prevElement = [...queue]
+  ) {
+    if (node === this.root.rootNode) {
+      return 0;
+    }
+    if (queue[0].rootNode === node) {
+      return 0;
+    }
+
+    if (queue[0] !== undefined) {
+      if (queue[0].left !== null) {
+        queue.push(queue[0].left);
+      }
+
+      if (queue[0].right !== null) {
+        queue.push(queue[0].right);
+      }
+    }
+    queue.shift();
+    let count;
+
+    if (!prevElement.includes(queue[0]) && queue.length !== 0) {
+      count = 1;
+      prevElement = [...queue];
+    } else {
+      count = 0;
+    }
+    let TotalCount = count + this.depth(node, queue, prevElement);
+    return TotalCount;
+  }
+  isBalanced(callstack = [this.root]) {
+    let valuation = true;
+    if (callstack[0] === undefined) {
+      return valuation;
+    }
+    if (
+      (callstack[0].left === null && callstack[0].right !== null) ||
+      (callstack[0].right === null && callstack[0].left !== null)
+    ) {
+      valuation = false;
+      return valuation;
+    }
+
+    if (callstack[0].left !== null) {
+      callstack.push(callstack[0].left);
+    }
+    if (callstack[0].right !== null) {
+      callstack.push(callstack[0].right);
+    }
+    callstack.shift();
+    return this.isBalanced(callstack);
+  }
 }
 
 function buildTree(array) {
@@ -288,7 +387,3 @@ function sort(leftArray, rightArray) {
 
 let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 let TreeValue = new Tree(ArraySorted);
-
-TreeValue.inOrder((node) => {
-  console.log(node);
-});
