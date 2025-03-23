@@ -2,7 +2,8 @@ import Node from "./Node.js";
 
 class Tree {
   constructor(array) {
-    this.root = buildTree(array);
+    this.array = array;
+    this.root = buildTree(this.array);
   }
 
   insert(value, path = this.root) {
@@ -278,28 +279,68 @@ class Tree {
     let TotalCount = count + this.depth(node, queue, prevElement);
     return TotalCount;
   }
-  isBalanced(callstack = [this.root]) {
-    let valuation = true;
-    if (callstack[0] === undefined) {
-      return valuation;
-    }
+  isBalanced(node = this.root, queue = [node]) {
+    let valuation;
+
     if (
-      (callstack[0].left === null && callstack[0].right !== null) ||
-      (callstack[0].right === null && callstack[0].left !== null)
+      Math.abs(
+        this.height(node.left.rootNode) - this.height(node.right.rootNode)
+      ) <= 1
     ) {
+      valuation = true;
+    } else {
       valuation = false;
-      return valuation;
+    }
+    if (queue[0] === undefined) {
+      return;
+    }
+    if (queue[0] !== undefined) {
+      if (queue[0].left !== null) {
+        queue.push(queue[0].left);
+      }
+
+      if (queue[0].right !== null) {
+        queue.push(queue[0].right);
+      }
     }
 
-    if (callstack[0].left !== null) {
-      callstack.push(callstack[0].left);
-    }
-    if (callstack[0].right !== null) {
-      callstack.push(callstack[0].right);
-    }
-    callstack.shift();
-    return this.isBalanced(callstack);
+    queue.shift();
+    this.isBalanced(node, queue);
+
+    return valuation;
   }
+  /*rebalance(node = this.root, queue = [node]) {
+    if (this.isBalanced() === true) {
+      return;
+    }
+    let valuation;
+    if (
+      this.height(node.right.rootNode) - this.height(node.left.rootNode) <=
+      1
+    ) {
+      valuation = true;
+    } else {
+      console.log();
+      valuation = false;
+    }
+    if (queue[0] === undefined) {
+      return;
+    }
+    if (queue[0] !== undefined) {
+      if (queue[0].left !== null) {
+        queue.push(queue[0].left);
+      }
+
+      if (queue[0].right !== null) {
+        queue.push(queue[0].right);
+      }
+    }
+
+    queue.shift();
+    this.rebalance(node, queue);
+
+    return valuation;
+  }*/
 }
 
 function buildTree(array) {
@@ -349,7 +390,6 @@ function sortedArray(array) {
     }
   }
   let finalValue = sort(sortedArray(leftArray), sortedArray(RightArray));
-
   return finalValue;
 }
 
@@ -386,4 +426,13 @@ function sort(leftArray, rightArray) {
 }
 
 let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+
 let TreeValue = new Tree(ArraySorted);
+
+/*
+TreeValue.insert(8.5);
+TreeValue.insert(7.4);
+TreeValue.insert(7.3);
+TreeValue.insert(7.2);*/
+
+console.log(TreeValue.isBalanced());
