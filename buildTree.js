@@ -281,52 +281,48 @@ class Tree {
   }
   isBalanced(node = this.root, queue = [node]) {
     let valuation;
+    if (queue[0] === undefined) {
+      return true;
+    }
 
-    if (
-      Math.abs(
-        this.height(node.left.rootNode) - this.height(node.right.rootNode)
-      ) <= 1
-    ) {
+    let leftValue =
+      queue[0].left !== null ? this.height(queue[0].left.rootNode) : 0;
+    let rightValue =
+      queue[0].right !== null ? this.height(queue[0].right.rootNode) : 0;
+
+    if (Math.abs(leftValue - rightValue) <= 1) {
       valuation = true;
     } else {
       valuation = false;
-    }
-    if (queue[0] === undefined) {
-      return;
-    }
-    if (queue[0] !== undefined) {
-      if (queue[0].left !== null) {
-        queue.push(queue[0].left);
-      }
 
-      if (queue[0].right !== null) {
-        queue.push(queue[0].right);
-      }
+      return valuation;
+    }
+    if (queue[0].left !== null) {
+      queue.push(queue[0].left);
     }
 
+    if (queue[0].right !== null) {
+      queue.push(queue[0].right);
+    }
     queue.shift();
-    this.isBalanced(node, queue);
-
-    return valuation;
+    return this.isBalanced(node, queue);
   }
-  /*rebalance(node = this.root, queue = [node]) {
+
+  rebalance() {
+    this.array = this.CreateNewArray();
+
+    this.root = buildTree(this.array);
+  }
+
+  CreateNewArray(queue = [this.root]) {
+    if (queue[0] === undefined) {
+      return [];
+    }
+
+    let NewArray = [queue[0].rootNode];
     if (this.isBalanced() === true) {
       return;
-    }
-    let valuation;
-    if (
-      this.height(node.right.rootNode) - this.height(node.left.rootNode) <=
-      1
-    ) {
-      valuation = true;
     } else {
-      console.log();
-      valuation = false;
-    }
-    if (queue[0] === undefined) {
-      return;
-    }
-    if (queue[0] !== undefined) {
       if (queue[0].left !== null) {
         queue.push(queue[0].left);
       }
@@ -334,13 +330,11 @@ class Tree {
       if (queue[0].right !== null) {
         queue.push(queue[0].right);
       }
+      queue.shift();
+
+      return NewArray.concat(this.CreateNewArray(queue));
     }
-
-    queue.shift();
-    this.rebalance(node, queue);
-
-    return valuation;
-  }*/
+  }
 }
 
 function buildTree(array) {
@@ -429,10 +423,7 @@ let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 
 let TreeValue = new Tree(ArraySorted);
 
-/*
-TreeValue.insert(8.5);
-TreeValue.insert(7.4);
-TreeValue.insert(7.3);
-TreeValue.insert(7.2);*/
+TreeValue.insert(4.3);
+TreeValue.insert(4.2);
 
 console.log(TreeValue.isBalanced());
