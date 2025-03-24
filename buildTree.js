@@ -129,7 +129,12 @@ class Tree {
 
     return traverse;
   }
-  levelOrder(callback, queue = [this.root]) {
+  levelOrder(
+    callback = (node) => {
+      console.log(node);
+    },
+    queue = [this.root]
+  ) {
     if (callback === undefined) {
       throw new Error("Callback function is not provided");
     }
@@ -151,7 +156,13 @@ class Tree {
     this.levelOrder(callback, queue);
     return;
   }
-  levelOrderIteration(callback, queue = [this.root], i = 0) {
+  levelOrderIteration(
+    callback = (node) => {
+      console.log(node);
+    },
+    queue = [this.root],
+    i = 0
+  ) {
     if (queue[i].left === null && queue[i].right === null) {
       queue.forEach((value, index) => {
         console.log(value.rootNode);
@@ -169,7 +180,12 @@ class Tree {
     this.levelOrderIteration(callback, queue, (i += 1));
     return queue;
   }
-  preOrder(callback, callstack = [this.root]) {
+  preOrder(
+    callback = (node) => {
+      console.log(node);
+    },
+    callstack = [this.root]
+  ) {
     callback(callstack[0].rootNode);
     if (callstack[0].left !== null) {
       callstack.unshift(callstack[0].left);
@@ -182,7 +198,12 @@ class Tree {
       callstack.shift();
     }
   }
-  inOrder(callback, callstack = [this.root]) {
+  inOrder(
+    callback = (node) => {
+      console.log(node);
+    },
+    callstack = [this.root]
+  ) {
     if (callstack[0].left === null) {
       callback(callstack[0].rootNode);
       callstack.shift();
@@ -202,7 +223,12 @@ class Tree {
 
     callstack.shift();
   }
-  postOrder(callback, callstack = [this.root]) {
+  postOrder(
+    callback = (node) => {
+      console.log(node);
+    },
+    callstack = [this.root]
+  ) {
     if (callstack[0].right === null && callstack[0].left === null) {
       callback(callstack[0].rootNode);
       callstack.shift();
@@ -418,12 +444,4 @@ function sort(leftArray, rightArray) {
 
   return [...finalArray, ...leftArray, ...rightArray];
 }
-
-let ArraySorted = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-
-let TreeValue = new Tree(ArraySorted);
-
-TreeValue.insert(4.3);
-TreeValue.insert(4.2);
-
-console.log(TreeValue.isBalanced());
+export default Tree;
